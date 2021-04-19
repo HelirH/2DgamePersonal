@@ -20,12 +20,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         float xInput = Input.GetAxis("Horizontal");
-        float yInput = Input.GetAxis("Vertical");
         rb.velocity = new Vector2(xInput * moveSpeed, rb.velocity.y);
-        if (Math.Abs(rb.velocity.y) < 0.01)
-        {
-            rb.velocity = new Vector2(xInput * moveSpeed, yInput * jumpHeight);
-        }
         if (xInput < 0)
         {
             sp.flipX = true;
@@ -39,6 +34,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded())
+        {
+            rb.AddForce(Vector2.up * jumpHeight, ForceMode2D.Force);
+        }
+    }
 
+    bool isGrounded()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1f);
+        return hit.collider != null;
     }
 }
